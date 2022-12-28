@@ -3,10 +3,16 @@ import folium
 import geocoder 
 
 from .models import Search
+from .forms import SearchForm
 
 # Create your views here.
 def index(request):
-    address = request.POST.get('addre')
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            address = request.POST['addre']
+    else:
+        address = Search.objects.all().first()
     location = geocoder.osm(address)
     #lat = location['latitude']
     lat = location.lat
